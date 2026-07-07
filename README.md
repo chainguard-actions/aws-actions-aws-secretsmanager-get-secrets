@@ -1,1 +1,15 @@
-# aws-actions-aws-secretsmanager-get-secrets
+# aws-actions/aws-secretsmanager-get-secrets
+
+GitHub action for retrieving secrets from AWS Secrets Manager
+
+Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at [https://github.com/aws-actions/aws-secretsmanager-get-secrets](https://github.com/aws-actions/aws-secretsmanager-get-secrets).
+
+## Versions
+
+| Version | Tag | Upstream commit |
+|---------|-----|-----------------|
+| v2.0.10 | [`v2.0.10`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/tree/v2.0.10) | [`a9a7eb4`](https://github.com/aws-actions/aws-secretsmanager-get-secrets/commit/a9a7eb4e2f2871d30dc5b892576fde60a2ecc802) |
+
+## Privacy
+
+This Action contacts Chainguard's licensing server to verify authorization. Connection metadata (IP address, GitHub repository identifier, timestamp, and any metadata encoded in the auth token) is transmitted to Chainguard, Inc. even if authorization is denied in accordance with our [Privacy Notice](https://www.chainguard.dev/legal/privacy-notice)
