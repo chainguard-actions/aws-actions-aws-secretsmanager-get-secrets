@@ -1,0 +1,1 @@
+# aws-actions-aws-secretsmanager-get-secrets
