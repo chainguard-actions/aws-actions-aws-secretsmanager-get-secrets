@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - main
+
+name: Package
+
+permissions: {}
+
+jobs:
+  check:
+    name: Package distribution file
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
+        with:
+          ref: main
+      - name: Package
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - name: Commit
+        run: |
+          git config --global user.name "GitHub Actions"
+          git add dist/
+          git commit -m "chore: Update dist" || echo "No changes to commit"
+          git push origin HEAD:main
