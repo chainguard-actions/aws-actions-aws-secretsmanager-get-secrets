@@ -8,6 +8,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 
 | Version | Tag | Upstream commit |
 |---------|-----|-----------------|
+| v1.0.6 | [`v1.0.6`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/tree/v1.0.6) | [`022e891`](https://github.com/aws-actions/aws-secretsmanager-get-secrets/commit/022e8919774ecb75e8e375656d7b1898936ab878) |
 | v2.0.10 | [`v2.0.10`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/tree/v2.0.10) | [`a9a7eb4`](https://github.com/aws-actions/aws-secretsmanager-get-secrets/commit/a9a7eb4e2f2871d30dc5b892576fde60a2ecc802) |
 
 ## Privacy
