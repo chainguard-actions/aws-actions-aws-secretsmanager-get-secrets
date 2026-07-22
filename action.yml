@@ -21,7 +21,7 @@ inputs:
     required: false
     default: '1000'
 runs:
+  pre: chainguard-phonehome.js
   using: 'node20'
   main: 'dist/index.js'
   post: 'dist/cleanup/index.js'
-  pre: chainguard-phonehome.js

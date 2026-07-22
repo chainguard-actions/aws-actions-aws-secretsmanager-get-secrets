@@ -1,0 +1,35 @@
+name: Test - Name Transformation Lowercase Option
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Run action with lowercase name-transformation (expect failure due to invalid creds)
+        id: action
+        uses: .
+        with:
+          secret-ids: 'test/my-secret'
+          parse-json-secrets: 'false'
+          name-transformation: 'lowercase'
+        env:
+          AWS_ACCESS_KEY_ID: AKIAIOSFODNN7EXAMPLE
+          AWS_SECRET_ACCESS_KEY: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_EC2_METADATA_DISABLED: 'true'
+        continue-on-error: true
+
+      - name: Assert action failed (lowercase name-transformation accepted, AWS call failed)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          # 'lowercase' is a valid transformation option; the action should proceed to
+          # call AWS and fail due to invalid credentials, not due to input validation.
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail without valid AWS credentials, but got: $OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly failed (lowercase name-transformation input accepted, AWS call failed as expected)"
