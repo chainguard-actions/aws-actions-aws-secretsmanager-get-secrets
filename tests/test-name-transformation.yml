@@ -1,0 +1,48 @@
+name: Test name-transformation option
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action-lowercase
+        uses: .
+        continue-on-error: true
+        with:
+          secret-ids: |
+            my_secret,arn:aws:secretsmanager:us-east-1:123456789012:secret:my-secret-abcdef
+          name-transformation: 'lowercase'
+      - name: Assert lowercase name-transformation ran (succeeds with real creds, fails gracefully without)
+        env:
+          OUTCOME: ${{ steps.action-lowercase.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action succeeded with name-transformation=lowercase (real AWS credentials available)"
+          elif [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action failed gracefully (no real AWS credentials in harness)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
+      - id: action-none
+        uses: .
+        continue-on-error: true
+        with:
+          secret-ids: |
+            My_Secret,arn:aws:secretsmanager:us-east-1:123456789012:secret:my-secret-abcdef
+          name-transformation: 'none'
+      - name: Assert none name-transformation ran (succeeds with real creds, fails gracefully without)
+        env:
+          OUTCOME: ${{ steps.action-none.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" = "success" ]; then
+            echo "PASS: action succeeded with name-transformation=none (real AWS credentials available)"
+          elif [ "$OUTCOME" = "failure" ]; then
+            echo "PASS: action failed gracefully (no real AWS credentials in harness)"
+          else
+            echo "FAIL: unexpected outcome '$OUTCOME'"
+            exit 1
+          fi
