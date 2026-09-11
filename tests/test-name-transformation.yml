@@ -1,0 +1,50 @@
+name: Test name-transformation option
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: AKIAIOSFODNN7EXAMPLE
+      AWS_SECRET_ACCESS_KEY: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Run action with name-transformation=lowercase (expect AWS auth failure)
+        id: action-lowercase
+        uses: .
+        with:
+          secret-ids: my-test-secret
+          name-transformation: lowercase
+        continue-on-error: true
+
+      - name: Assert lowercase transformation action ran and failed with AWS error
+        env:
+          OUTCOME: ${{ steps.action-lowercase.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail with invalid AWS credentials, got outcome=$OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action with name-transformation=lowercase correctly attempted AWS call"
+
+      - name: Run action with name-transformation=none (expect AWS auth failure)
+        id: action-none
+        uses: .
+        with:
+          secret-ids: my-test-secret
+          name-transformation: none
+        continue-on-error: true
+
+      - name: Assert none transformation action ran and failed with AWS error
+        env:
+          OUTCOME: ${{ steps.action-none.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail with invalid AWS credentials, got outcome=$OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action with name-transformation=none correctly attempted AWS call"
