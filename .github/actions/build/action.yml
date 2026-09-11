@@ -17,9 +17,9 @@ runs:
     - name: Determine role to assume
       id: role-to-assume
       env:
-        REPO_OWNER: ${{ github.repository_owner }}
+        REPOSITORY_OWNER: ${{ github.repository_owner }}
       run: |
-        if [ "$REPO_OWNER" == "aws-actions" ]; then
+        if [ "$REPOSITORY_OWNER" == "aws-actions" ]; then
           # Use prod role for the PRs running against the main repo
           echo "arn=arn:aws:iam::339713045997:role/GithubActionsRole" >> "$GITHUB_OUTPUT"
         else
