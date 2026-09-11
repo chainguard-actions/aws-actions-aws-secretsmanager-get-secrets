@@ -17,9 +17,9 @@ runs:
     - name: Determine role to assume
       id: role-to-assume
       env:
-        EVENT_NAME: ${{ github.event_name }}
+        GITHUB_EVENT_NAME: ${{ github.event_name }}
       run: |
-        if [ "$EVENT_NAME" == "push" ]; then
+        if [ "$GITHUB_EVENT_NAME" == "push" ]; then
           # Use prod role for the PRs running against the main repo
           echo "arn=arn:aws:iam::339713045997:role/GithubActionsRole" >> "$GITHUB_OUTPUT"
         else
