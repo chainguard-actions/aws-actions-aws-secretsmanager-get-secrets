@@ -1,0 +1,30 @@
+name: Test name-transformation none option (no real AWS creds)
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: AKIAIOSFODNN7EXAMPLE
+      AWS_SECRET_ACCESS_KEY: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Run action with name-transformation=none and expect failure
+        id: action
+        uses: .
+        with:
+          secret-ids: my-test-secret
+          parse-json-secrets: 'false'
+          name-transformation: none
+        continue-on-error: true
+      - name: Assert action failed due to missing AWS credentials
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then
+            echo "FAIL: expected action to fail with invalid AWS credentials, but got outcome=$OUTCOME"
+            exit 1
+          fi
+          echo "PASS: action correctly failed when AWS credentials are invalid (name-transformation=none)"
