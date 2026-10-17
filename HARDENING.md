@@ -16,19 +16,19 @@ Action **aws-actions--aws-secretsmanager-get-secrets/v2.0.10** was hardened auto
 
 ### script-injection (severity: high)
 
-Sub-rule (a): A GitHub Actions expression `${{ github.repository_owner }}` is directly interpolated inside a `run:` shell command string. Even though `github.repository_owner` is typically GitHub-controlled, any `${{ ... }}` expression inside a `run:` block undergoes YAML template substitution before the shell sees it, enabling script injection. The offending line is: `if [ "${{ github.repository_owner }}" == "aws-actions" ]; then`. It should be moved to an `env:` variable and referenced as a quoted shell variable instead.
+Sub-rule (a): A GitHub Actions expression is directly interpolated inside a `run:` shell command string. In `.github/actions/build/action.yml` line 20, `${{ github.repository_owner }}` is embedded directly in the shell `if` condition: `if [ "${{ github.repository_owner }}" == "aws-actions" ]; then`. The `github.repository_owner` value flows through YAML template substitution before the shell ever sees it, allowing an attacker to inject shell metacharacters. The fix is to pass the value via an `env:` variable and reference it as a quoted shell variable (e.g., `env: REPO_OWNER: ${{ github.repository_owner }}` then `if [ "$REPO_OWNER" == "aws-actions" ]; then`).
 
 Locations:
 
-- `.github/actions/build/action.yml:19`
+- `.github/actions/build/action.yml:20`
 
 ### unpinned-uses (severity: high)
 
-The composite action references `aws-actions/configure-aws-credentials@v4`, which uses a mutable version tag (`@v4`) rather than a full 40-character commit SHA. A mutable tag can be silently redirected to a different (potentially malicious) commit, enabling supply-chain attacks. Pin to a specific SHA, e.g. `aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4`.
+The composite action step `Configure AWS Credentials` references `aws-actions/configure-aws-credentials@v4`, which uses a mutable tag (`@v4`) rather than a full 40-character commit SHA. A tag can be moved to point to a different (potentially malicious) commit at any time, creating a supply-chain risk. It should be pinned to a specific commit SHA, e.g., `aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e831c8b509e6a38 # v4`.
 
 Locations:
 
-- `.github/actions/build/action.yml:27`
+- `.github/actions/build/action.yml:29`
 
 ## Iteration Notes
 
@@ -38,5 +38,5 @@ Locations:
 
 **Notes:**
 
-Fixed two findings in hardened/action/.github/actions/build/action.yml: (1) script-injection: moved `${{ github.repository_owner }}` out of the `run:` shell string into an `env:` block as `REPOSITORY_OWNER`, referencing it as `"$REPOSITORY_OWNER"` in the shell script; (2) unpinned-uses: pinned `aws-actions/configure-aws-credentials@v4` to its full commit SHA `7474bc4690e29a8392af63c5b98e7449536d5c3a` with `# v4` comment for readability.
+Fixed two findings in hardened/action/.github/actions/build/action.yml: (1) script-injection: moved `${{ github.repository_owner }}` from the `run:` shell string into an `env:` block as `REPO_OWNER`, then referenced it as `"$REPO_OWNER"` in the shell condition; (2) unpinned-uses: pinned `aws-actions/configure-aws-credentials@v4` to the full commit SHA `7474bc4690e29a8392af63c5b98e7449536d5c3a` with `# v4` comment for readability.
 
