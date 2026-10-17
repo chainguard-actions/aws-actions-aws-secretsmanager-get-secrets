@@ -16,7 +16,7 @@ Action **aws-actions--aws-secretsmanager-get-secrets/v3.0.0** was hardened autom
 
 ### script-injection (severity: high)
 
-Sub-rule (a): The `run:` block in the 'Determine role to assume' step directly interpolates `${{ github.event_name }}` inside a shell command string: `if [ "${{ github.event_name }}" == "push" ]; then`. GitHub Actions performs YAML template substitution before the shell ever sees the string, so an attacker-controlled or unexpected value could break out of the quoted context. The safe fix is to pass the value via an `env:` variable and reference it as `"$EVENT_NAME"` in the shell script.
+Sub-rule (a) violation: The composite action's 'Determine role to assume' step directly interpolates `${{ github.event_name }}` inside a `run:` shell command string. Before the shell ever sees the command, GitHub Actions performs YAML template substitution, injecting the raw value of `github.event_name` into the shell script. An attacker who can control this context value (e.g. via a crafted event name) could inject arbitrary shell commands. The offending line is: `if [ "${{ github.event_name }}" == "push" ]; then`. The fix is to pass the value via an `env:` variable and reference it as `"$GITHUB_EVENT_NAME"` (or the pre-set `$GITHUB_EVENT_NAME` environment variable) instead.
 
 Locations:
 
@@ -24,11 +24,11 @@ Locations:
 
 ### unpinned-uses (severity: high)
 
-The composite action references `aws-actions/configure-aws-credentials@v6`, which uses a mutable version tag rather than a full 40-character commit SHA. A tag can be moved to point to a different (potentially malicious) commit at any time, making this a supply-chain risk. Pin to a specific SHA, e.g. `aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v6`.
+The composite action references `aws-actions/configure-aws-credentials@v6`, which uses a mutable tag (`v6`) rather than a full 40-character immutable commit SHA. If the tag is moved (intentionally or via a supply-chain attack), the action will silently execute different code. Pin to a specific commit SHA, e.g. `aws-actions/configure-aws-credentials@<40-char-sha> # v6`.
 
 Locations:
 
-- `.github/actions/build/action.yml:28`
+- `.github/actions/build/action.yml:27`
 
 ## Iteration Notes
 
@@ -38,5 +38,5 @@ Locations:
 
 **Notes:**
 
-Fixed two findings in hardened/action/.github/actions/build/action.yml: (1) script-injection: moved `${{ github.event_name }}` into an `env:` block as `EVENT_NAME` and updated the shell script to use `$EVENT_NAME` instead of the direct template expression; (2) unpinned-uses: pinned `aws-actions/configure-aws-credentials@v6` to the full commit SHA `cbe3b392738ccf3f987d68400dafcf4b0624a56c` with a `# v6` comment.
+Fixed two findings in hardened/action/.github/actions/build/action.yml: (1) script-injection: moved `${{ github.event_name }}` from the `run:` shell string into an `env:` block as `EVENT_NAME`, referencing it as `$EVENT_NAME` in the shell script; (2) unpinned-uses: pinned `aws-actions/configure-aws-credentials@v6` to the full commit SHA `e1253824e5c10ff9df46874f81ed3ec929e19cfd` with the tag preserved as a comment.
 
