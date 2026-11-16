@@ -4,13 +4,18 @@
   "version": "v3.0.1",
   "commit_sha": "2cb1a461cbd4865ac4299648312e4704c646cd53",
   "url": "https://github.com/aws-actions/aws-secretsmanager-get-secrets",
-  "policy_sha": "d636be7e43ef829af6e853da6b3c7566db9f72fe",
+  "policy_sha": "374911c4be584df24e6da57af2d990570ef0f859",
   "test_policy_sha": "843adf9e4b8f85d0c08b27b9d0b09dd094b54702",
   "test_agent_version": "2",
   "harden_agent_version": "2",
   "node_artifact": {
-    "gcs_uri": "gs://prod-actions-node-artifacts/node-artifacts/aws-actions/aws-secretsmanager-get-secrets/v3.0.1/sha256-4da8655e415be30ed1d10959e89886942c51e7b3df5b3d799f6968d5b7ac0705.tar.gz",
+    "gcs_uri": "gs://patch-actions-node-artifacts/node-artifacts/aws-actions/aws-secretsmanager-get-secrets/v3.0.1/sha256-4da8655e415be30ed1d10959e89886942c51e7b3df5b3d799f6968d5b7ac0705.tar.gz",
     "sha256": "4da8655e415be30ed1d10959e89886942c51e7b3df5b3d799f6968d5b7ac0705",
     "size_bytes": 1813091
+  },
+  "dist_artifact": {
+    "gcs_uri": "gs://patch-actions-node-artifacts/dist-artifacts/aws-actions/aws-secretsmanager-get-secrets/v3.0.1/sha256-280e9cbaab764349b7a3010e88e3c1e613854586739ffb618ab645bad32e0d44.tar.gz",
+    "sha256": "280e9cbaab764349b7a3010e88e3c1e613854586739ffb618ab645bad32e0d44",
+    "size_bytes": 2301758
   }
 }

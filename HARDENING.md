@@ -4,7 +4,7 @@
 
 > This file was generated automatically by the hardening agent.
 
-**Policy SHA:** `d636be7e43ef829af6e853da6b3c7566db9f72fe`
+**Policy SHA:** `374911c4be584df24e6da57af2d990570ef0f859`
 
 **Test Policy SHA:** `843adf9e4b8f85d0c08b27b9d0b09dd094b54702`
 
@@ -16,7 +16,7 @@ Action **aws-actions--aws-secretsmanager-get-secrets/v3.0.1** was hardened autom
 
 ### script-injection (severity: high)
 
-Sub-rule (a) violation: The composite action directly interpolates `${{ github.event_name }}` inside a `run:` shell block. The Actions template engine substitutes this value before the shell parses the command, allowing an attacker who can control the event name to inject arbitrary shell commands. The offending line is: `if [ "${{ github.event_name }}" == "push" ]; then`. This should be replaced with the environment variable `$GITHUB_EVENT_NAME` (already available in the runner environment) and referenced as a quoted shell variable instead.
+Sub-rule (a): a GitHub Actions expression is placed directly inside a run: script in the 'Determine role to assume' step: `if [ "${{ github.event_name }}" == "push" ]; then`. Fix: move the value into an env: variable or use the built-in $GITHUB_EVENT_NAME, and quote it: `if [ "$GITHUB_EVENT_NAME" == "push" ]`.
 
 Locations:
 
@@ -24,11 +24,11 @@ Locations:
 
 ### unpinned-uses (severity: high)
 
-The composite action references `aws-actions/configure-aws-credentials@v6`, which uses a mutable version tag rather than a pinned 40-character commit SHA. A tag can be moved to point to a different (potentially malicious) commit at any time, making this a supply-chain risk. It should be pinned to a full SHA, e.g. `aws-actions/configure-aws-credentials@<40-char-sha> # v6`.
+A uses: reference points to a mutable tag instead of a full 40-character commit SHA: `uses: aws-actions/configure-aws-credentials@v6`. Fix: pin it to a commit SHA, with the tag in a comment.
 
 Locations:
 
-- `.github/actions/build/action.yml:29`
+- `.github/actions/build/action.yml:28`
 
 ## Iteration Notes
 
@@ -38,5 +38,5 @@ Locations:
 
 **Notes:**
 
-Fixed two findings in hardened/action/.github/actions/build/action.yml: (1) script-injection — replaced `${{ github.event_name }}` with the shell environment variable `$GITHUB_EVENT_NAME`, which is already provided by the GitHub Actions runner, eliminating the template-engine injection risk; (2) unpinned-uses — pinned `aws-actions/configure-aws-credentials@v6` to the full commit SHA `e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6`.
+In .github/actions/build/action.yml, the 'Determine role to assume' step no longer puts ${{ github.event_name }} straight into the run: script. The value now goes into an env: variable (EVENT_NAME) and the script compares the quoted "$EVENT_NAME". aws-actions/configure-aws-credentials@v6 is now pinned to commit e1253824e5c10ff9df46874f81ed3ec929e19cfd, with '# v6' kept as a comment. I looked up that SHA from the v6 tag rather than guessing it. Nothing else was changed, and I haven't run anything to test it.
 
