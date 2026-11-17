@@ -14,6 +14,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | v3.0.0 | [`v3.0.0`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/tree/v3.0.0) | [`3a411b6`](https://github.com/aws-actions/aws-secretsmanager-get-secrets/commit/3a411b6ec5cace3d626412dd917e7bfeac242cfa) | — |
 | v3.0.1 | [`v3.0.1`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/tree/v3.0.1) | [`2cb1a46`](https://github.com/aws-actions/aws-secretsmanager-get-secrets/commit/2cb1a461cbd4865ac4299648312e4704c646cd53) | [`HARDENING.md`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/blob/v3.0.1/HARDENING.md) |
 | v3.0.2 | [`v3.0.2`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/tree/v3.0.2) | [`2297f9a`](https://github.com/aws-actions/aws-secretsmanager-get-secrets/commit/2297f9a879480a9e3af9b293ed15c70caf8e1c88) | [`HARDENING.md`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/blob/v3.0.2/HARDENING.md) |
+| v4.0.0 | [`v4.0.0`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/tree/v4.0.0) | [`e952bd7`](https://github.com/aws-actions/aws-secretsmanager-get-secrets/commit/e952bd7125c27e5be0060e50955b90a7e5addd99) | [`HARDENING.md`](https://github.com/chainguard-actions/aws-actions-aws-secretsmanager-get-secrets/blob/v4.0.0/HARDENING.md) |
 
 ## Privacy
 
